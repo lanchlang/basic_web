@@ -45,5 +45,19 @@ $nav-link-active-color:$nav-link-hover-color;
          color:$nav-link-active-color;
          font-weight: 500;
        }
+       .subnav{
+         li>a{
+           font-size:1rem;
+           letter-spacing: 2px;
+         }
+         ul{
+          display:none;
+          position: absolute;
+         }
+         &:hover ul{
+          display: block;
+         } 
+       }
+       
     }
   }

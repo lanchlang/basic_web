@@ -54,22 +54,59 @@
         <li><a href="/" class="nav-link active">首页</a></li>
         <li><a href="/popular" class="nav-link">热门</a></li>
         <li> <a href="/favorite" class="nav-link">喜欢</a></li>
-        <li> <a href="#" class="nav-link">分类</a></li>
-        <li><a href="#" class="nav-link">标签</a></li>
+        <li class="subnav">
+            <a href="#" class="nav-link">分类
+               <ul >
+                 <li><a href="/category/1">子类1</a></li>
+                 <li><a href="/category/1">子类1</a></li>
+                 <li><a href="/category/1">子类1</a></li>
+                 <li><a href="/category/1">子类1</a></li>
+                 <li><a href="/category/1">子类1</a></li>
+               </ul>
+            </a>
+        </li>
+        <li  class="subnav">
+          <a href="#" class="nav-link subnav">标签
+              <ul >
+                 <li><a href="/tag/tag1">标签一</a></li>
+                 <li><a href="/tag/tag1">标签一</a></li>
+                 <li><a href="/tag/tag1">标签一</a></li>
+                 <li><a href="/tag/tag1">标签一</a></li>
+                 <li><a href="/tag/tag1">标签一</a></li>
+              </ul>
+          </a>
+        </li>
       </ul>
     </nav>
     <form action="" class="search">
       <input type="text"><button>search</button></form>
     <nav class="user">
-
+      <a href="#" class="login-btn">登录</a>  
+      <a href="#" class="register-btn">注册</a>  
+      <a href="#" class="login-icon">微信</a>
+      <a href="#" class="login-icon">微博</a>
+      <a href="#" class="login-icon">QQ</a>
     </nav>
   </header>
   <article class="content">
-    <section></section>
-    <section></section>
-    <section></section>
-    <section></section>
-    <section></section>
+    <section class="blog">
+       <a href="#" class="blog-cover"><img src="#" alt="#"></a>
+       <div class="blog-info">
+          <a href="#" class="blog-title"><h3>title</h3></a>
+          <p class="blog-intro">blog-introduce</p>
+          <ul class="blog-tags">
+              <li><a href=""></a></li>
+              <li><a href=""></a></li>
+              <li><a href=""></a></li>
+              <li><a href=""></a></li>
+          </ul>
+          <a href="#" class="blog-avatar"><img src="#" alt="#"></a>
+          <a href="#" class="blog-model">model</a>
+          <a href="#" class="blog-favor-cnt">100</a>  
+          <a href="#" class="blog-comment-cnt">10</a>
+          <a href="#" class="blog-view-cnt">1000</a>
+       </div>
+    </section>
   </article>
   <!-- build:js scripts/main.min.js -->
   <script src="scripts/main.js"></script>
