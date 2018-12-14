@@ -318,6 +318,19 @@ body {
       margin-left: 18px;
       color: #aaa;
     }
+    .btn-like{
+      float:right;
+    }
+    .liked{
+      color: #fff;
+      background-color: #6c757d;
+      border-color: #6c757d;
+      &:hover{
+        color: #fff;
+        background-color: #5a6268;
+        border-color: #545b62;
+      }
+    }
   }
 
   p.tags {

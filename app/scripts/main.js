@@ -49,6 +49,8 @@
   }
 })();
 $(document).ready(function () {
+  let commentEditor = null;
+
   function layout() {
     // 加载瀑布流
     let windowWidth = $(window).width()
@@ -98,6 +100,7 @@ $(document).ready(function () {
   $(window).resize(function () {
     layout()
   })
+
   window.showLoginForm = function () {
     $("#loginForm").modal('show')
     $("#registerForm").modal('hide')
@@ -105,6 +108,12 @@ $(document).ready(function () {
   window.showRegisterForm = function () {
     $("#registerForm").modal('show')
     $("#loginForm").modal('hide')
+  }
+  window.isLogin = function () {
+    if (window.user) {
+      return true
+    }
+    return false
   }
 
   function testEmail(str) {
@@ -131,12 +140,12 @@ $(document).ready(function () {
     return true
   }
 
-  function testStrLen(key,str, min, max) {
+  function testStrLen(key, str, min, max) {
     if (str.length < min || str.length > max) {
       //提示错误
       swal({
         title: '错误',
-        text: key+"的长度应该在"+min+"和"+max+"之间",
+        text: key + "的长度应该在" + min + "和" + max + "之间",
         icon: 'error',
         button: '确定',
       })
@@ -150,7 +159,7 @@ $(document).ready(function () {
       return
     }
     let password = $("#login_password").val()
-    if(!testStrLen("密码",password,8,20)){
+    if (!testStrLen("密码", password, 8, 20)) {
       return
     }
     $.ajax({
@@ -166,6 +175,8 @@ $(document).ready(function () {
         //TODO:获取用户的信息
         //隐藏
         $("#loginForm").modal('hide')
+        //启用commentEditor
+        enableCommentEditor(commentEditor)
       },
       error: function (message) {
         //提示错误
@@ -180,7 +191,7 @@ $(document).ready(function () {
   }
   window.regiter = function () {
     let username = $("#register_username").val()
-    if(!testStrLen("用户名",username,4,20)){
+    if (!testStrLen("用户名", username, 4, 20)) {
       return
     }
     let email = $("#register_email").val()
@@ -188,7 +199,7 @@ $(document).ready(function () {
       return
     }
     let password = $("#register_password").val()
-    if(!testStrLen("密码",password,8,20)){
+    if (!testStrLen("密码", password, 8, 20)) {
       return
     }
     $.ajax({
@@ -196,7 +207,7 @@ $(document).ready(function () {
       url: "/api/v1/register/email",
       contentType: "application/json; charset=utf-8",
       data: JSON.stringify({
-        username:username,
+        username: username,
         email: email,
         password: password
       }),
@@ -223,8 +234,98 @@ $(document).ready(function () {
       }
     });
   }
+  window.like = function (id) {
+    if (isLogin()) {
+      $.ajax({
+        type: "GET",
+        url: "/api/v1/blogs/" + id + "/like",
+        contentType: "application/json; charset=utf-8",
+        success: function (result) {
+          //提示用户激活邮箱
+          swal({
+            title: '消息',
+            text: result.message,
+            icon: 'success',
+            button: '确定',
+          })
+        },
+        error: function (result) {
+          //提示错误
+          swal({
+            title: '错误',
+            text: result.error,
+            icon: 'error',
+            button: '确定',
+          })
+        }
+      });
+    }else{
+      //提示错误
+      swal({
+        title: '警告',
+        text: '登录后才能点赞收藏',
+        icon: 'warning',
+        button: '确定',
+      })
+    }
+  }
+  window.unlike = function (id) {
+    if (isLogin()) {
+      $.ajax({
+        type: "GET",
+        url: "/api/v1/blogs/" + id + "/unlike",
+        contentType: "application/json; charset=utf-8",
+        success: function (result) {
+          //提示用户激活邮箱
+          swal({
+            title: '消息',
+            text: result.message,
+            icon: 'success',
+            button: '确定',
+          })
+        },
+        error: function (result) {
+          //提示错误
+          swal({
+            title: '错误',
+            text: result.error,
+            icon: 'error',
+            button: '确定',
+          })
+        }
+      });
+    } else {
+      //提示错误
+      swal({
+        title: '警告',
+        text: '登录后才能取消点赞收藏',
+        icon: 'warning',
+        button: '确定',
+      })
+    }
+  }
+  function initListener(){
+      //点赞
+      $(".btn-like").click(function(e){
+           let $ele=$(e.target)
+           let blogId=$ele.prop("blog-id")
+           if($ele.hasClass("liked")){
+              $ele.removeClass("liked")
+              $ele.text("点个赞吧")   
+              like(blogId)
+           }else{
+              $ele.addClass("liked")
+              $ele.text("已点赞") 
+              unlike(blogId)  
+           }
+      });
+  }
+  initListener() 
   // 开启编辑功能 
   function enableCommentEditor(editor) {
+    if ($("#comment_editor").length<0) {
+      return
+    }
     $("#new_comment").prop({
       disabled: false
     })
@@ -274,6 +375,9 @@ $(document).ready(function () {
   }
   // 禁用编辑功能
   function disableCommentEditor(editor) {
+    if ($("#comment_editor").length<0) {
+      return
+    }
     $("#new_comment").prop({
       disabled: true
     })
@@ -282,13 +386,13 @@ $(document).ready(function () {
   }
 
   function initCommentEditor() {
-    if (!window.wangEditor) {
+    if ($("#comment_editor").length<0) {
       return
     }
     var E = window.wangEditor
-    var editor = new E('#comment_editor_header', '#comment_editor_body') // 两个参数也可以传入 elem 对象，class 选择器
+    var commentEditor = new E('#comment_editor_header', '#comment_editor_body') // 两个参数也可以传入 elem 对象，class 选择器
     // 自定义菜单配置
-    editor.customConfig.menus = [
+    commentEditor.customConfig.menus = [
       'head',
       'bold',
       'italic',
@@ -297,11 +401,12 @@ $(document).ready(function () {
       'quote', // 引用
       'emoticon', // 表情
     ]
-    editor.create()
+    commentEditor.customConfig.zIndex = 1049
+    commentEditor.create()
     if (!window.user) {
-      disableCommentEditor(editor)
+      disableCommentEditor(commentEditor)
     } else {
-      enableCommentEditor(editor)
+      enableCommentEditor(commentEditor)
     }
 
   }
