@@ -109,9 +109,9 @@
         </div>
         <div class="article-body">
           <ul class="adw">
-            <li><img alt="XiuRen 秀人 No.1254 小尤奈 情趣萝莉 - 1" src="https://img.lesmao.vip/k/1178/T/XiuRen/1254/1254_001_kax_3600_5400.jpg"></li>
-            <li><img alt="XiuRen 秀人 No.1254 小尤奈 情趣萝莉 - 2" src="https://img.lesmao.vip/k/1178/T/XiuRen/1254/1254_002_79p_3600_5400.jpg"></li>
-            <li><img alt="XiuRen 秀人 No.1254 小尤奈 情趣萝莉 - 3" src="https://img.lesmao.vip/k/1178/T/XiuRen/1254/1254_003_i96_3600_5400.jpg"></li>
+            <li><img alt="XiuRen 秀人 No.1254 小尤奈 情趣萝莉 - 1" src="https://mtl.ttsqgs.com/images/img/7519/1.jpg"></li>
+            <li><img alt="XiuRen 秀人 No.1254 小尤奈 情趣萝莉 - 2" src="https://mtl.ttsqgs.com/images/img/7519/1.jpg"></li>
+            <li><img alt="XiuRen 秀人 No.1254 小尤奈 情趣萝莉 - 3" src="https://mtl.ttsqgs.com/images/img/7519/1.jpg"></li>
             <li><img alt="XiuRen 秀人 No.1254 小尤奈 情趣萝莉 - 4" src="https://img.lesmao.vip/k/1178/T/XiuRen/1254/1254_004_rfn_3600_5400.jpg"></li>
 
           </ul>
@@ -148,7 +148,7 @@
           </div>
           <div id="comment_editor_body" class="text">
             <!--可使用 min-height 实现编辑区域自动增加高度-->
-            <p>请输入内容</p>
+            <p class="comment_editor_placeholder">请输入内容</p>
           </div>
         </div>
         <button id="new_comment" class="btn btn-primary">发表评论</button>
@@ -225,6 +225,70 @@
       </ul>
     </div>
   </main>
+  <!-- Modal -->
+  <div class="modal fade" id="registerForm" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle"
+    aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="exampleModalLongTitle">欢迎君子注册</h5>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body">
+          <form>
+            <div class="form-group">
+              <label for="register_username" class="col-form-label">用户名</label>
+              <input type="text" class="form-control" id="register_username">
+            </div>
+            <div class="form-group">
+                <label for="register_email" class="col-form-label">邮箱</label>
+                <input type="email" class="form-control" id="register_email">
+              </div>
+            <div class="form-group">
+              <label for="register_password" class="col-form-label">密码</label>
+              <input type="password" class="form-control" id="register_password">
+            </div>
+          </form>
+        </div>
+        <div class="modal-footer">
+            <a type="button" class="btn btn-primary" href="javascript:register()">注册</a>
+            <button type="button" class="btn" style="background-color:transparent;border-width:0;">已有账号?<a href='javascript:showLoginForm()'>登录</a></button>  
+      </div>
+      </div>
+    </div>
+  </div>
+  <!-- Modal -->
+  <div class="modal fade" id="loginForm" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle"
+    aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="exampleModalLongTitle">欢迎君子登录</h5>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body">
+          <form>
+            <div class="form-group">
+              <label for="login_email" class="col-form-label">邮箱</label>
+              <input type="text" class="form-control" id="login_email">
+            </div>
+            <div class="form-group">
+              <label for="login_password" class="col-form-label">密码</label>
+              <input type="password" class="form-control" id="login_password">
+            </div>
+          </form>
+        </div>
+        <div class="modal-footer">
+            <a type="button" class="btn btn-primary" href="javascript:login()">登录</a>
+            <button type="button" class="btn" style="background-color:transparent;border-width:0;">没有账号?<a href='javascript:showRegisterForm()'>注册</a></button>  
+        </div>
+      </div>
+    </div>
+  </div>
   <!-- 引入bootstrap,jquery -->
   <script src="https://cdn.bootcss.com/jquery/3.3.1/jquery.min.js"></script>
   <script src="https://cdn.bootcss.com/masonry/4.2.2/masonry.pkgd.min.js"></script>

@@ -98,6 +98,188 @@ $(document).ready(function () {
   $(window).resize(function () {
     layout()
   })
+  window.showLoginForm = function () {
+    $("#loginForm").modal('show')
+    $("#registerForm").modal('hide')
+  }
+  window.showRegisterForm = function () {
+    $("#registerForm").modal('show')
+    $("#loginForm").modal('hide')
+  }
+
+  function testEmail(str) {
+    var reg = new RegExp("^[a-z0-9]+([._\\-]*[a-z0-9])*@([a-z0-9]+[-a-z0-9]*[a-z0-9]+.){1,63}[a-z0-9]+$");
+    if (!str.trim()) { //输入不能为空
+      //提示错误
+      swal({
+        title: '错误',
+        text: "邮箱不能为空",
+        icon: 'error',
+        button: '确定',
+      })
+      return false;
+    } else if (!reg.test(str)) { //正则验证不通过，格式不对
+      //提示错误
+      swal({
+        title: '错误',
+        text: "请输入正确的邮箱",
+        icon: 'error',
+        button: '确定',
+      })
+      return false;
+    }
+    return true
+  }
+
+  function testStrLen(key,str, min, max) {
+    if (str.length < min || str.length > max) {
+      //提示错误
+      swal({
+        title: '错误',
+        text: key+"的长度应该在"+min+"和"+max+"之间",
+        icon: 'error',
+        button: '确定',
+      })
+      return false
+    }
+    return true
+  }
+  window.login = function () {
+    let email = $("#login_email").val()
+    if (!testEmail(email)) {
+      return
+    }
+    let password = $("#login_password").val()
+    if(!testStrLen("密码",password,8,20)){
+      return
+    }
+    $.ajax({
+      type: "POST",
+      url: "/api/v1/login/email",
+      contentType: "application/json; charset=utf-8",
+      data: JSON.stringify({
+        email: email,
+        password: password
+      }),
+      dataType: "json",
+      success: function (comment) {
+        //TODO:获取用户的信息
+        //隐藏
+        $("#loginForm").modal('hide')
+      },
+      error: function (message) {
+        //提示错误
+        swal({
+          title: '错误',
+          text: message.error,
+          icon: 'error',
+          button: '确定',
+        })
+      }
+    });
+  }
+  window.regiter = function () {
+    let username = $("#register_username").val()
+    if(!testStrLen("用户名",username,4,20)){
+      return
+    }
+    let email = $("#register_email").val()
+    if (!testEmail(email)) {
+      return
+    }
+    let password = $("#register_password").val()
+    if(!testStrLen("密码",password,8,20)){
+      return
+    }
+    $.ajax({
+      type: "POST",
+      url: "/api/v1/register/email",
+      contentType: "application/json; charset=utf-8",
+      data: JSON.stringify({
+        username:username,
+        email: email,
+        password: password
+      }),
+      dataType: "json",
+      success: function (comment) {
+        //隐藏
+        $("#loginForm").modal('hide')
+        //提示用户激活邮箱
+        swal({
+          title: '消息',
+          text: '恭喜你，激活你的邮箱后就注册成功了',
+          icon: 'success',
+          button: '确定',
+        })
+      },
+      error: function (message) {
+        //提示错误
+        swal({
+          title: '错误',
+          text: message.error,
+          icon: 'error',
+          button: '确定',
+        })
+      }
+    });
+  }
+  // 开启编辑功能 
+  function enableCommentEditor(editor) {
+    $("#new_comment").prop({
+      disabled: false
+    })
+    editor.$textElem.attr('contenteditable', true)
+    $("#comment_editor_body .comment_editor_placeholder").text("请输入内容")
+    //点击提交
+    $("#new_comment").click(function () {
+      //如果已经登录
+      if (window.user && window.blogId) {
+        let commentText = editor.txt.text()
+        if (commentText.length > 5) {
+          $.ajax({
+            type: "POST",
+            url: "/api/v1/comments",
+            contentType: "application/json; charset=utf-8",
+            data: JSON.stringify({
+              blog_id: window.blogId,
+              content: commentText
+            }),
+            dataType: "json",
+            success: function (comment) {
+              //TODO:add to comment list
+              //隐藏
+              $("#comment_editor").css("display", "none")
+            },
+            error: function (message) {
+              //提示错误
+              swal({
+                title: '错误',
+                text: message.error,
+                icon: 'error',
+                button: '确定',
+              })
+            }
+          });
+        } else {
+          //提示错误
+          swal({
+            title: '警告',
+            text: '请输入至少5个字符！！！',
+            icon: 'warning',
+            button: '确定',
+          })
+        }
+      }
+    })
+  }
+  // 禁用编辑功能
+  function disableCommentEditor(editor) {
+    $("#new_comment").prop({
+      disabled: true
+    })
+    editor.$textElem.attr('contenteditable', false)
+    $("#comment_editor_body .comment_editor_placeholder").html("请先<a href='javascript:showLoginForm()'>登录</a>或<a href='javascript:showRegisterForm()'>注册</a>")
+  }
 
   function initCommentEditor() {
     if (!window.wangEditor) {
@@ -116,44 +298,12 @@ $(document).ready(function () {
       'emoticon', // 表情
     ]
     editor.create()
-    //点击提交
-    $("#new_comment").click(function () {
-      //如果已经登录
-      if (window.user && window.blogId) {
-        let commentText = editor.txt.text()
-        if (commentText.length > 5) {
-          $.ajax({
-            type: "POST",
-            url: "/api/v1/comments",
-            contentType: "application/json; charset=utf-8",
-            data: JSON.stringify({blog_id:window.blogId,content:commentText}),
-            dataType: "json",
-            success: function (comment) {
-              //TODO:add to comment list
-              //隐藏
-              $("#comment_editor").css("display","none")
-            },
-            error: function (message) {
-              //提示错误
-              swal({
-                title: '错误',
-                text: message.error,
-                icon: 'error',
-                button: '确定',
-              })
-            }
-          });
-        } else {
-              //提示错误
-              swal({
-                title: '警告',
-                text: '请输入至少5个字符！！！',
-                icon: 'warning',
-                button: '确定',
-              })
-        }
-      }
-    })
+    if (!window.user) {
+      disableCommentEditor(editor)
+    } else {
+      enableCommentEditor(editor)
+    }
+
   }
   initCommentEditor()
 });

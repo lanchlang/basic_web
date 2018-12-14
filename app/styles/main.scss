@@ -352,6 +352,9 @@ body {
     border: 1px #eeeff2 solid;
 
     .article-body {
+      li{
+        list-style: none;
+      }
       li+li {
         margin-top: 20px;
       }
